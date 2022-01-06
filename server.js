@@ -74,8 +74,8 @@ function addDepartment () {
   }
   ])
   .then((answers) => {
-    db.query(`INSERT INTO departments(id, full_name) VALUES ()`, function (err, results) {
-      console.log(`Added ${answers} to the database.`)
+    db.query(`INSERT INTO departments(id, full_name) VALUES (${id}, ${answers})`, function (err, results) {
+      console.log(`Added ${results} to the database.`)
     });
   })
   .catch((error) => {
@@ -107,9 +107,53 @@ function addRole () {
   }
   ])
   .then((answers) => {
-    db.query('INSERT INTO roles', )
-
+    db.query(`INSERT INTO roles(id, title, salary, departments_id) VALUES (${id}, ${answers.roleName}, ${answers.roleSalary}, ${answers.roleDept})`, function (err, results) {
+      console.log(`Added ${answers.roleName} to the database.`)
+    });
   })
+}
+
+function addEmployee () {
+  inquirer
+  .prompt ([{
+    type: 'input',
+    message: "What is the employee's first name?",
+    name: "firstName",
+  },
+  {
+    type: 'input',
+    message: "What is the employee's last name?",
+    name: 'lastName',
+  },
+  {
+    type: 'list',
+    message: "What is the employee's role?",
+    choices: ['Sales Manager', 'Sales Associate', 'Accountant', 'Junior Accountant', 'Customer Service Manager', 'Customer Service Rep', 'Software Engineer', 'Javascript Developer', 'Operations Manager', 'Outside Operations', 'Counselor', 'Associate Counselor'],
+    name: 'empRole',
+  },
+  {
+    type: 'list',
+    message: "Who is the employee's manager?",
+    choices: ['John', 'Gary', 'Test'],
+    name: 'empManager',
+  }
+  ])
+  .then((answers) => {
+    db.query(`INSERT INTO employees(id, first_name, last_name, roles_id, manager_id) VALUES (${id}, ${answers.firstName}, ${answers.lastName}, ${answers.empRole}, ${answers.empManager})`, function (err, results) {
+      console.log(`Added ${answers.firstName} ${answers.lastName} to the database.`)
+    })
+  })
+}
+
+function updateEmployee () {
+  inquirer
+  .prompt ([{
+    type: 'list',
+    message: "Which employee's role do you want to update?",
+    choices: [],
+    name: 'empName',
+  },
+  ])
 }
 
 
@@ -117,12 +161,3 @@ function addRole () {
 // db.query('SELECT * FROM students', function (err, results) {
 //   console.log('Student results:', results);
 // });
-
-// Default response for any other request (Not Found)
-app.use((req, res) => {
-  res.status(404).end();
-});
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
